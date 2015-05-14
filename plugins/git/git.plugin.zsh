@@ -98,7 +98,7 @@ compdef _git gvt=git verify-tag
 #remove the gf alias
 #alias gf='git ls-files | grep'
 
-alias gpoat='git push origin --all && git push origin --tags'
+alias gpoat='git push $(current_remote) --all && git push $(current_remote) --tags'
 alias gmt='git mergetool --no-prompt'
 compdef _git gmt=git-mergetool
 
@@ -123,8 +123,15 @@ alias gsr='git svn rebase'
 alias gsd='git svn dcommit'
 #
 # Will return the current branch name
-# Usage example: git pull origin $(current_branch)
+# Usage example: git pull $(current_remote) $(current_branch)
 #
+function current_remote() {
+  ! $(git rev-parse 2> /dev/null) && rem=no-git || \
+  rem=$(git remote 2> /dev/null | grep $USER) || \
+  rem=origin
+  echo ${rem}
+}
+
 function current_branch() {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || \
   ref=$(git rev-parse --short HEAD 2> /dev/null) || return
@@ -138,13 +145,13 @@ function current_repository() {
 }
 
 # these aliases take advantage of the previous function
-alias ggpull='git pull origin $(current_branch)'
+alias ggpull='git pull $(current_remote) $(current_branch)'
 compdef ggpull=git
-alias ggpur='git pull --rebase origin $(current_branch)'
+alias ggpur='git pull --rebase $(current_remote) $(current_branch)'
 compdef ggpur=git
-alias ggpush='git push origin $(current_branch)'
+alias ggpush='git push $(current_remote) $(current_branch)'
 compdef ggpush=git
-alias ggpnp='git pull origin $(current_branch) && git push origin $(current_branch)'
+alias ggpnp='git pull $(current_remote) $(current_branch) && git push $(current_remote) $(current_branch)'
 compdef ggpnp=git
 
 # Pretty log messages
