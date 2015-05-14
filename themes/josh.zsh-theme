@@ -31,7 +31,7 @@ function josh_prompt {
     prompt=" $prompt"
   done
   
-  prompt="%{%F{green}%}$PWD$prompt%{%F{red}%}$(rvm_prompt_info || rbenv_prompt_info)%{$reset_color%} $(current_branch)"
+  prompt="%{%F{green}%}$PWD$prompt%{%F{red}%}$(current_remote)%{$reset_color%}/$(current_branch)"
   
   echo $prompt
 }
